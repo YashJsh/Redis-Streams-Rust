@@ -1,3 +1,4 @@
+use redis::Commands;
 use redis_streams::{StreamCommands, StreamReadOptions, client_open};
 
 use serde;
@@ -10,6 +11,7 @@ struct ChatMessage {
     time_stamp: String,
 }
 
+
 #[tokio::main]
 async fn main() {
     println!("Hello from my side");
@@ -17,6 +19,9 @@ async fn main() {
     let mut conn = client
         .get_connection()
         .expect("Error in getting connection");
+
+    let g : String = conn.xgroup_create("redis_test", "group_yash", "$").unwrap();
+    println!("group created : {}",g.to_string());
 
     let message = ChatMessage {
         user: 111,
@@ -75,3 +80,5 @@ async fn main() {
         }
     });
 }
+
+
